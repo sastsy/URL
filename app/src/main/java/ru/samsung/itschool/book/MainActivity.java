@@ -2,91 +2,54 @@ package ru.samsung.itschool.book;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.lang.ref.SoftReference;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
-    Character manager;
-    Story story;
-    int count = 1;
+    Button start_button;
+    EditText textEdit;
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        start_button = (Button) findViewById(R.id.start_button);
+        textEdit = (EditText) findViewById(R.id.textEdit);
+        imageView = (ImageView) findViewById(R.id.image);
+        final Thread thread = new Thread(new LoadImage());
 
-        manager = new Character();
-        story = new Story(count);
-
-        updateStatus();
-    }
-
-
-    private void go(int i) {
-        story.go(i + 1);
-        updateStatus();
-        if (story.isEnd()) {
-            if (manager.R + manager.I + manager.E >= 150) {
-                ++count;
+        start_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, "Делаем операцию в потоке", Toast.LENGTH_SHORT).show();
+                thread.start();
             }
-            else {
-                count += 2;
+        });
+    }
+
+    private class LoadImage implements Runnable {
+        @Override
+        public void run() {
+            try {
+                URL url = new URL(textEdit.getText().toString());
+                InputStream image = (InputStream) url.getContent();
+                Bitmap myImage = BitmapFactory.decodeStream(image);
+                imageView.setImageBitmap(myImage);
             }
-            story = new Story(count);
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-
-    private void updateStatus() {
-
-        manager.R += story.current_situation.dR;
-        manager.I += story.current_situation.dI;
-        manager.E += story.current_situation.dE;
-
-        ((TextView) findViewById(R.id.status)).
-                setText("Ответственность:" + manager.R + "\nИнтеллект:" + manager.I + "\nЭмпатия:" + manager.E);
-
-        ((TextView) findViewById(R.id.title)).
-                setText(story.current_situation.subject);
-
-        ((TextView) findViewById(R.id.desc)).
-                setText(story.current_situation.text);
-        ((LinearLayout) findViewById(R.id.layout)).removeAllViews();
-
-        for (int i = 0; i < story.current_situation.direction.length; i++) {
-            Button b = new Button(this);
-            b.setText(Integer.toString(i + 1));
-            final int buttonId = i;
-
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    go(buttonId);
-
-                }
-            });
-            ((LinearLayout) findViewById(R.id.layout)).addView(b);
-        }
-
-        if (story.current_situation.direction.length == 0 && count < 4) {
-            Button b = new Button(this);
-            b.setText("Далее");
-
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ++count;
-                    story = new Story(count);
-                    updateStatus();
-                }
-            });
-            ((LinearLayout) findViewById(R.id.layout)).addView(b);
-        }
-    }
-
 }

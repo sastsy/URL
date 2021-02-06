@@ -6,28 +6,24 @@
     android:orientation="vertical"
     tools:context="ru.samsung.itschool.book.MainActivity">
 
-    <TextView
+    <EditText
+        android:id="@+id/textEdit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/start_button"
+        android:text="Начать в потоке"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Статус"
-        android:id="@+id/status"
-        />
+        android:layout_height="wrap_content" />
     <TextView
+        android:id="@+id/text"
+        android:text="Выполнено: 0 / 100"
+        android:layout_width="fill_parent"
+        android:layout_height="20pt" />
+    <ImageView
+        android:id="@+id/image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Заголовок ситуации"
-        android:id="@+id/title"
-        android:textStyle="bold"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Описание ситуации"
-        android:id="@+id/desc"
-        />
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/layout"/>
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
