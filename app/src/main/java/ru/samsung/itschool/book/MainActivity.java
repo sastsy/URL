@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         bStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Делаем операцию в потоке (10с)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Делаем операцию в потоке", Toast.LENGTH_SHORT).show();
                 new LoadImage().execute();
             }
         });
